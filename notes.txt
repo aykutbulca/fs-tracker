@@ -1,0 +1,2 @@
+# MacOS'taki ToolTip gözükmeme sorunu
+https://github.com/electron/electron/issues/3599
