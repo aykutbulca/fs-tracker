@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route} from 'react-router-dom'
 
 import CreateWatcher from './components/create_watcher';
 
+import '../assets/css/semantic/semantic.min.css';
+import '../assets/css/app.css';
+
 class ViewManager extends React.Component {
     static Views() {
         return {
@@ -24,7 +27,7 @@ class ViewManager extends React.Component {
     render() {
         return ( 
             <Router>
-                <div>
+                <div >
                     <Route path = '/' component = { ViewManager.View } /> 
                 </div> 
             </Router>

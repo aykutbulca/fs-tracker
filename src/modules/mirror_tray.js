@@ -33,10 +33,11 @@ class MirrorTray extends Tray {
 
     createContextMenuTemplate() {
         return [
-            this.createContextMenuItem("New Watcher", () => {
+            this.createContextMenuItem("New..", () => {
                 this.showCreateWatcherWindow();
-            }),
+            }, 'CmdOrCtrl+N'),
             this.createSeperator(),
+            this.createContextMenuItem("About Mirror"),
             this.createContextMenuItem("Quit", app.quit, 'CmdOrCtrl+Q')
         ];
     }
