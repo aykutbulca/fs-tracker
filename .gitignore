@@ -57,5 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
+.vscode/
+
 main_old.js
 notes.txt
