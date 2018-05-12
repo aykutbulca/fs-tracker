@@ -1,7 +1,8 @@
-const webpack = require('webpack')
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { spawn } = require('child_process')
+const webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const { spawn } = require('child_process');
 
 // Config directories
 const SRC_DIR = path.resolve(__dirname, 'src')
@@ -26,6 +27,14 @@ module.exports = {
         include: defaultInclude
       },
       {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: 'css-loader'
+        }),
+        include: defaultInclude
+      },
+      {
         test: /\.(jpe?g|png|gif|ico)$/,
         use: [{ loader: 'file-loader?name=img/[name]__[hash:base64:5].[ext]' }],
         include: defaultInclude
@@ -43,6 +52,7 @@ module.exports = {
   target: 'electron-renderer',
   plugins: [
     new HtmlWebpackPlugin(),
+    new ExtractTextPlugin('styles.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
     })

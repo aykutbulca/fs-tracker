@@ -27,6 +27,14 @@ module.exports = {
         include: defaultInclude
       },
       {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: 'css-loader'
+        }),
+        include: defaultInclude
+      },
+      {
         test: /\.(jpe?g|png|gif|ico)$/,
         use: [{ loader: 'file-loader?name=img/[name]__[hash:base64:5].[ext]' }],
         include: defaultInclude
