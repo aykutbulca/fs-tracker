@@ -26,5 +26,5 @@ app.on('ready', () => {
 });
 
 app.on('window-all-closed', (event) => {
-  event.preventDefault();
+  event.preventDefault(); //Run in background
 });
