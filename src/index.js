@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 //Import View Manager
-import ViewManager from './app/ViewManager';
+import ViewManager from './app/view_manager';
 
 // Since we are using HtmlWebpackPlugin WITHOUT a template
 // we should create our own root node in the body element before rendering into it

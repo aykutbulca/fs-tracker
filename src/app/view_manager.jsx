@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route} from 'react-router-dom'
 
-import AddNewWatcher from './components/AddNewWatcher';
+import CreateWatcher from './components/create_watcher';
 
 class ViewManager extends React.Component {
     static Views() {
         return {
-            AddNewWatcher: <AddNewWatcher />
+            CreateWatcher: <CreateWatcher />
         }
     }
 
