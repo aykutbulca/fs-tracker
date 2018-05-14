@@ -8,33 +8,49 @@ const StyledButton = styled.button`
     float: right !important;
 `;
 
+const Link = styled.a`
+    font-size: 13px !important;
+    padding-left: 3px !important;
+`;
+
 class CreateWatcher extends React.Component {
 
     constructor(props) {
         super(props);
         
         this.state = {
-            folderToWatch: 'initial value',
-            folderToSync: 'initial value'
+            folderToWatch: '',
+            foldersToSync: [''],
         };
 
-        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleFolderToWatchInputChange = this.handleFolderToWatchInputChange.bind(this);
+        this.addNewFolderToSync = this.addNewFolderToSync.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleInputChange(event) {
-        const newState = {};
-        newState[event.name] = event.newValue;
-        this.setState(newState);
+    handleFolderToWatchInputChange(event) {
+        this.setState({ folderToWatch: event.newValue });
+    }
+
+    handleFoldersToSyncInputChange(event, index) {
+        const newFoldersToSync = this.state.foldersToSync.map(i => i);
+
+        if(index < 0) { // index < 0 means, we want to add new empty item to list.
+            newFoldersToSync.push('');
+        } else {
+            newFoldersToSync[index] = event.newValue;
+        }
+
+        this.setState({ foldersToSync: newFoldersToSync });
+    }
+
+    addNewFolderToSync() {
+        this.handleFoldersToSyncInputChange(null, -1);
     }
 
     handleSubmit(event) {
         event.preventDefault();
         console.log("state", this.state);
-    }
-
-    showFolderDialog(element) {
-        element.click();
     }
 
     render() {
@@ -45,19 +61,33 @@ class CreateWatcher extends React.Component {
                     <FolderInput placeholder="Type or browse folder to watch" 
                         name="folderToWatch"
                         value={this.state.folderToWatch}
-                        onChange={this.handleInputChange}/>
+                        onChange={this.handleFolderToWatchInputChange}/>
                 </div>
                 <div className="field">
                     <label>Select <u>folder(s)</u> to sync</label>
-                    <FolderInput placeholder="Type or browse folder to watch" 
-                        name="folderToSync"
-                        value={this.state.folderToSync}
-                        onChange={this.handleInputChange}/>
+                    { this.renderFoldersToSyncItems() }
+                    <Link href="#" onClick={this.addNewFolderToSync} >Add one more folder to sync...</Link>
                 </div>
                 <StyledButton className="ui primary compact button" type="submit">Start Watcher</StyledButton>
                 <StyledButton className="ui compact button" type="button">Close</StyledButton>
             </form>
         );
+    }
+
+    renderFoldersToSyncItems() {
+        const syncFolderItems = this.state.foldersToSync.map((item, index) => {
+            return (
+                <FolderInput 
+                    key={index}
+                    placeholder="Type or browse folder to watch" 
+                    style={{marginBottom: '3px'}}
+                    name={`foldersToSync[${index}]`}
+                    value={this.state.foldersToSync[index]}
+                    onChange={event => this.handleFoldersToSyncInputChange(event, index)}/>
+            );
+        });
+
+        return syncFolderItems;
     }
 
 }

@@ -1,5 +1,9 @@
+html {
+    height: inherit !important;
+}
+
 body {
-    background-color: #EBEDEF;
+    background-color: #EBEDEF !important;
 }
 
 form {

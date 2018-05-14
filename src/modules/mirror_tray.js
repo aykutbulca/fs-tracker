@@ -53,7 +53,7 @@ class MirrorTray extends Tray {
     showCreateWatcherWindow() {
         if(this.createWatcherWindowRef == null) {
             this.createWatcherWindowRef = new MirrorWindow({
-                height: 300,
+                height: 275,
                 width: 400,
                 show: true,
                 view: 'CreateWatcher',
