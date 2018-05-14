@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const { remote } = require('electron');
+
 import FolderInput from './folder_input';
 
 const StyledButton = styled.button`
@@ -25,7 +27,9 @@ class CreateWatcher extends React.Component {
 
         this.handleFolderToWatchInputChange = this.handleFolderToWatchInputChange.bind(this);
         this.addNewFolderToSync = this.addNewFolderToSync.bind(this);
+
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.closeWindow = this.closeWindow.bind(this);
     }
 
     handleFolderToWatchInputChange(event) {
@@ -46,11 +50,22 @@ class CreateWatcher extends React.Component {
 
     addNewFolderToSync() {
         this.handleFoldersToSyncInputChange(null, -1);
+        this.changeWindowHeight(40);
     }
 
     handleSubmit(event) {
         event.preventDefault();
         console.log("state", this.state);
+    }
+
+    changeWindowHeight(offset) {
+        const currentWindow = remote.getCurrentWindow();
+        const bounds = currentWindow.getBounds();
+        currentWindow.setSize(bounds.width, bounds.height + offset);
+    }
+
+    closeWindow() {
+        remote.getCurrentWindow().close();
     }
 
     render() {
@@ -69,7 +84,7 @@ class CreateWatcher extends React.Component {
                     <Link href="#" onClick={this.addNewFolderToSync} >Add one more folder to sync...</Link>
                 </div>
                 <StyledButton className="ui primary compact button" type="submit">Start Watcher</StyledButton>
-                <StyledButton className="ui compact button" type="button">Close</StyledButton>
+                <StyledButton className="ui compact button" type="button" onClick={this.closeWindow} >Close</StyledButton>
             </form>
         );
     }
