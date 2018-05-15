@@ -1,7 +1,7 @@
+const { remote } = require('electron');
+
 import React from 'react';
 import styled from 'styled-components';
-
-const { remote } = require('electron');
 
 import FolderInput from './folder_input';
 
@@ -13,6 +13,10 @@ const StyledButton = styled.button`
 const Link = styled.a`
     font-size: 13px !important;
     padding-left: 3px !important;
+`;
+
+const FolderInputWithMargin = styled(FolderInput)`
+    margin-bottom: 3px;
 `;
 
 class CreateWatcher extends React.Component {
@@ -92,10 +96,9 @@ class CreateWatcher extends React.Component {
     renderFoldersToSyncItems() {
         const syncFolderItems = this.state.foldersToSync.map((item, index) => {
             return (
-                <FolderInput 
+                <FolderInputWithMargin 
                     key={index}
                     placeholder="Type or browse folder to watch" 
-                    style={{marginBottom: '3px'}}
                     name={`foldersToSync[${index}]`}
                     value={this.state.foldersToSync[index]}
                     onChange={event => this.handleFoldersToSyncInputChange(event, index)}/>

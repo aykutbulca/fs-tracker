@@ -54,7 +54,7 @@ class FolderInput extends React.Component {
 
     render() {
         return (
-            <FlexDiv style={this.props.style}>
+            <FlexDiv className={this.props.className}>
                 <StyledInput type="text" placeholder={this.props.placeholder}
                     value={this.state.path} 
                     onChange={this.handleTextInputChange}/>
