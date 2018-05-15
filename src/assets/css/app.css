@@ -1,9 +1,11 @@
+@import url(semantic/semantic.min.css);
+
 html {
-    height: inherit !important;
+    height: inherit;
 }
 
 body {
-    background-color: #EBEDEF !important;
+    background: #EBEDEF;
 }
 
 form {

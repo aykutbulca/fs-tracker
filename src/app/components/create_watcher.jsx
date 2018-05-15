@@ -81,7 +81,7 @@ class CreateWatcher extends React.Component {
                 <div className="field">
                     <label>Select <u>folder(s)</u> to sync</label>
                     { this.renderFoldersToSyncItems() }
-                    <Link href="#" onClick={this.addNewFolderToSync} >Add one more folder to sync...</Link>
+                    <Link href="#" onClick={this.addNewFolderToSync} >+ Add more folders to sync...</Link>
                 </div>
                 <StyledButton className="ui primary compact button" type="submit">Start Watcher</StyledButton>
                 <StyledButton className="ui compact button" type="button" onClick={this.closeWindow} >Close</StyledButton>
