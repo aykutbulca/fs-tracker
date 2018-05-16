@@ -20,7 +20,6 @@ const FolderInputWithMargin = styled(FolderInput)`
 `;
 
 class CreateWatcher extends React.Component {
-
     constructor(props) {
         super(props);
         
@@ -77,8 +76,7 @@ class CreateWatcher extends React.Component {
             <form className="ui form" onSubmit={this.handleSubmit}>
                 <div className="field">
                     <label>Select a <u>folder</u> to watch for changes</label>
-                    <FolderInput placeholder="Type or browse folder to watch" 
-                        name="folderToWatch"
+                    <FolderInput placeholder="Type or browse or drop a folder to watch" 
                         value={this.state.folderToWatch}
                         onChange={this.handleFolderToWatchInputChange}/>
                 </div>
@@ -98,8 +96,7 @@ class CreateWatcher extends React.Component {
             return (
                 <FolderInputWithMargin 
                     key={index}
-                    placeholder="Type or browse folder to watch" 
-                    name={`foldersToSync[${index}]`}
+                    placeholder="Type or browse or drop a folder to sync"
                     value={this.state.foldersToSync[index]}
                     onChange={event => this.handleFoldersToSyncInputChange(event, index)}/>
             );

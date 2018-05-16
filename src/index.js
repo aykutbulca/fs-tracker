@@ -13,4 +13,8 @@ root.id = 'root'
 // Append 'root' div to the 'body' element
 document.body.appendChild(root)
 
+//Disable default file navigation
+document.addEventListener('dragover', event => event.preventDefault())
+document.addEventListener('drop', event => event.preventDefault())
+
 render(<ViewManager />, document.getElementById('root'));

@@ -17,20 +17,27 @@ const CenteredIcon = styled.i`
     margin: auto !important;
 `;
 
+const HoverStyle = {
+    borderColor: '#2185d0'
+}
+
 class FolderInput extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { path: this.props.value };
+        this.state = { path: this.props.value, onDragOver: false };
 
         this.changeState = this.changeState.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.handleFolderInputChange = this.handleFolderInputChange.bind(this);
+        this.handleInputDrop = this.handleInputDrop.bind(this);
+        this.onDragOver = this.onDragOver.bind(this);
+        this.onDragLeave = this.onDragLeave.bind(this);
+        
         this.handleButtonClick = this.handleButtonClick.bind(this);
     }
 
-    changeState(name, oldValue, newValue) {
+    changeState(oldValue, newValue) {
         const stateSummary = {
-            name: name,
             oldValue: oldValue,
             newValue: newValue
         };
@@ -40,7 +47,7 @@ class FolderInput extends React.Component {
     }
 
     handleTextInputChange(event) {
-        this.changeState(this.props.name, this.state.path, event.target.value);
+        this.changeState(this.state.path, event.target.value);
     }
 
     handleButtonClick(event) {
@@ -49,14 +56,52 @@ class FolderInput extends React.Component {
 
     handleFolderInputChange() {
         const folderPath = this.folderInputRef.files[0].path;
-        this.changeState(this.props.name, this.state.path, folderPath);
+        this.changeState(this.state.path, folderPath);
+    }
+
+    handleInputDrop(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        this.setState({ onDragOver: false });
+
+        const items  = event.dataTransfer.items;
+
+        for (let i = 0; i < items.length; i++) 
+        {
+            const entry = items[i].webkitGetAsEntry();
+            const file = items[i].getAsFile();
+
+            if (entry.isDirectory) 
+            {
+                this.changeState(this.state.path, file.path);
+            }
+        }
+    }
+
+    onDragOver(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.setState({ onDragOver: true });
+    }
+
+    onDragLeave(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.setState({ onDragOver: false });
     }
 
     render() {
         return (
             <FlexDiv className={this.props.className}>
-                <StyledInput type="text" placeholder={this.props.placeholder}
+                <StyledInput 
+                    type="text" 
+                    style={this.state.onDragOver ? HoverStyle: null}
+                    placeholder={this.props.placeholder}
                     value={this.state.path} 
+                    onDragOver={this.onDragOver}
+                    onDragLeave={this.onDragLeave}
+                    onDrop={this.handleInputDrop}
                     onChange={this.handleTextInputChange}/>
                 <StyledButton className="ui button" type="button" title="Browse" onClick={this.handleButtonClick} >
                     <CenteredIcon className="folder black icon"></CenteredIcon>
