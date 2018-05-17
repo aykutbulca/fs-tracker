@@ -7,6 +7,7 @@ const FlexDiv = styled.div`
 
 const StyledInput = styled.input`
     margin-right: 7px !important;
+    padding-right: 2em !important;
 `;
 
 const StyledButton = styled.button`
@@ -17,6 +18,19 @@ const CenteredIcon = styled.i`
     margin: auto !important;
 `;
 
+const RelativeFlexDiv = styled(FlexDiv)`
+    position: relative !important;
+    width: 100%;
+`;
+
+const RightFixedIcon = styled.i`
+    margin: auto !important;
+    position: absolute !important;
+    right: 15px !important;
+    top: 11px !important;
+    cursor: pointer !important;
+`;
+
 const HoverStyle = {
     borderColor: '#2185d0'
 }
@@ -24,7 +38,7 @@ const HoverStyle = {
 class FolderInput extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { path: this.props.value, onDragOver: false };
+        this.state = { path: this.props.value, dragOver: false, mouseOver: false };
 
         this.changePathState = this.changePathState.bind(this);
         this.changeDragOverState = this.changeDragOverState.bind(this);
@@ -35,14 +49,19 @@ class FolderInput extends React.Component {
         this.handleInputDrop = this.handleInputDrop.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
+
+        this.onMouseEnterInput = this.onMouseEnterInput.bind(this);
+        this.onMouseLeaveInput = this.onMouseLeaveInput.bind(this);
         
         this.handleButtonClick = this.handleButtonClick.bind(this);
+        this.handleInputRemoveClick = this.handleInputRemoveClick.bind(this);
     }
 
-    changePathState(oldValue, newValue) {
+    changePathState(newValue, isCleared) {
         const stateSummary = {
-            oldValue: oldValue,
-            newValue: newValue
+            oldValue: this.state.path,
+            newValue: newValue,
+            cleared: isCleared
         };
 
         this.setState({ path: newValue });
@@ -54,11 +73,15 @@ class FolderInput extends React.Component {
     }
 
     changeDragOverState(newValue) {
-        this.setState({ onDragOver: newValue });
+        this.setState({ dragOver: newValue });
+    }
+
+    changeMouseOverState(newValue) {
+        this.setState({ mouseOver: newValue });
     }
 
     handleTextInputChange(event) {
-        this.changePathState(this.state.path, event.target.value);
+        this.changePathState(event.target.value);
     }
 
     handleButtonClick(event) {
@@ -67,7 +90,7 @@ class FolderInput extends React.Component {
 
     handleFolderInputChange() {
         const folderPath = this.folderInputRef.files[0].path;
-        this.changePathState(this.state.path, folderPath);
+        this.changePathState(folderPath);
     }
 
     handleInputDrop(event) {
@@ -85,9 +108,13 @@ class FolderInput extends React.Component {
 
             if (entry.isDirectory) 
             {
-                this.changePathState(this.state.path, file.path);
+                this.changePathState(file.path);
             }
         }
+    }
+
+    handleInputRemoveClick() {
+        this.changePathState('', true);
     }
 
     onDragOver(event) {
@@ -102,18 +129,35 @@ class FolderInput extends React.Component {
         this.changeDragOverState(false);
     }
 
+    onMouseEnterInput(event) {
+        this.changeMouseOverState(true);
+    }
+
+    onMouseLeaveInput(event) {
+        this.changeMouseOverState(false);
+    }
+
     render() {
         return (
             <FlexDiv className={this.props.className}>
-                <StyledInput 
-                    type="text" 
-                    style={this.state.onDragOver ? HoverStyle: null}
-                    placeholder={this.props.placeholder}
-                    value={this.state.path} 
+                <RelativeFlexDiv
                     onDragOver={this.onDragOver}
                     onDragLeave={this.onDragLeave}
                     onDrop={this.handleInputDrop}
-                    onChange={this.handleTextInputChange}/>
+                    onMouseEnter={this.onMouseEnterInput}
+                    onMouseLeave={this.onMouseLeaveInput}>
+                    <StyledInput type="text" 
+                        style={this.state.dragOver ? HoverStyle: null}
+                        placeholder={this.props.placeholder}
+                        value={this.state.path}
+                        onChange={this.handleTextInputChange}/>
+                    { 
+                        this.state.mouseOver && 
+                        <RightFixedIcon className="remove red icon"
+                            title="Clear"
+                            onClick={this.handleInputRemoveClick}/> 
+                    }
+                </RelativeFlexDiv>
                 <StyledButton className="ui button" type="button" title="Browse" onClick={this.handleButtonClick} >
                     <CenteredIcon className="folder black icon"></CenteredIcon>
                 </StyledButton>

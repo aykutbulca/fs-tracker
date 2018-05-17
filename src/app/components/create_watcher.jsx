@@ -19,6 +19,8 @@ const FolderInputWithMargin = styled(FolderInput)`
     margin-bottom: 3px;
 `;
 
+const FOLDER_INPUT_SIZE = 40;
+
 class CreateWatcher extends React.Component {
     constructor(props) {
         super(props);
@@ -40,12 +42,17 @@ class CreateWatcher extends React.Component {
     }
 
     handleFoldersToSyncInputChange(event, index) {
-        const newFoldersToSync = this.state.foldersToSync.map(i => i);
+        let newFoldersToSync = this.state.foldersToSync.map(i => i);
 
         if(index < 0) { // index < 0 means, we want to add new empty item to list.
             newFoldersToSync.push('');
         } else {
             newFoldersToSync[index] = event.newValue;
+            
+            if(event.cleared &&  newFoldersToSync.length > 1) {
+                newFoldersToSync.splice(index, 1);
+                this.changeWindowHeight(-FOLDER_INPUT_SIZE);
+            }
         }
 
         this.setState({ foldersToSync: newFoldersToSync });
@@ -53,7 +60,7 @@ class CreateWatcher extends React.Component {
 
     addNewFolderToSync() {
         this.handleFoldersToSyncInputChange(null, -1);
-        this.changeWindowHeight(40);
+        this.changeWindowHeight(FOLDER_INPUT_SIZE);
     }
 
     handleSubmit(event) {
@@ -92,17 +99,18 @@ class CreateWatcher extends React.Component {
     }
 
     renderFoldersToSyncItems() {
-        const syncFolderItems = this.state.foldersToSync.map((item, index) => {
+        return this.state.foldersToSync.map((item, index) => {
+            const value = this.state.foldersToSync[index];
+            const key = `${index}_${value}`;
+
             return (
                 <FolderInputWithMargin 
-                    key={index}
+                    key={key}
                     placeholder="Type or browse or drop a folder to sync"
-                    value={this.state.foldersToSync[index]}
+                    value={value}
                     onChange={event => this.handleFoldersToSyncInputChange(event, index)}/>
             );
         });
-
-        return syncFolderItems;
     }
 
 }
