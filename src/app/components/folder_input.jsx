@@ -26,9 +26,12 @@ class FolderInput extends React.Component {
         super(props);
         this.state = { path: this.props.value, onDragOver: false };
 
-        this.changeState = this.changeState.bind(this);
+        this.changePathState = this.changePathState.bind(this);
+        this.changeDragOverState = this.changeDragOverState.bind(this);
+        
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.handleFolderInputChange = this.handleFolderInputChange.bind(this);
+        
         this.handleInputDrop = this.handleInputDrop.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
@@ -36,18 +39,26 @@ class FolderInput extends React.Component {
         this.handleButtonClick = this.handleButtonClick.bind(this);
     }
 
-    changeState(oldValue, newValue) {
+    changePathState(oldValue, newValue) {
         const stateSummary = {
             oldValue: oldValue,
             newValue: newValue
         };
 
         this.setState({ path: newValue });
-        this.props.onChange(stateSummary);
+
+        //If parent component wants to know state changes
+        if(this.props.onChange) { 
+            this.props.onChange(stateSummary);
+        }
+    }
+
+    changeDragOverState(newValue) {
+        this.setState({ onDragOver: newValue });
     }
 
     handleTextInputChange(event) {
-        this.changeState(this.state.path, event.target.value);
+        this.changePathState(this.state.path, event.target.value);
     }
 
     handleButtonClick(event) {
@@ -56,14 +67,14 @@ class FolderInput extends React.Component {
 
     handleFolderInputChange() {
         const folderPath = this.folderInputRef.files[0].path;
-        this.changeState(this.state.path, folderPath);
+        this.changePathState(this.state.path, folderPath);
     }
 
     handleInputDrop(event) {
         event.stopPropagation();
         event.preventDefault();
 
-        this.setState({ onDragOver: false });
+        this.changeDragOverState(false);
 
         const items  = event.dataTransfer.items;
 
@@ -74,7 +85,7 @@ class FolderInput extends React.Component {
 
             if (entry.isDirectory) 
             {
-                this.changeState(this.state.path, file.path);
+                this.changePathState(this.state.path, file.path);
             }
         }
     }
@@ -82,13 +93,13 @@ class FolderInput extends React.Component {
     onDragOver(event) {
         event.stopPropagation();
         event.preventDefault();
-        this.setState({ onDragOver: true });
+        this.changeDragOverState(true);
     }
 
     onDragLeave(event) {
         event.stopPropagation();
         event.preventDefault();
-        this.setState({ onDragOver: false });
+        this.changeDragOverState(false);
     }
 
     render() {
