@@ -1,5 +1,5 @@
 const { remote } = require('electron');
-const { uuid } = require('uuid/v4');
+const uuid = require('uuid/v4');
 
 import React from 'react';
 import styled from 'styled-components';
