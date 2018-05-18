@@ -1,4 +1,5 @@
 const { remote } = require('electron');
+const { uuid } = require('uuid/v4');
 
 import React from 'react';
 import styled from 'styled-components';
@@ -26,8 +27,8 @@ class CreateWatcher extends React.Component {
         super(props);
         
         this.state = {
-            folderToWatch: '',
-            foldersToSync: [''],
+            folderToWatch: this.getNewPathInputItem(),
+            foldersToSync: [this.getNewPathInputItem()],
         };
 
         this.handleFolderToWatchInputChange = this.handleFolderToWatchInputChange.bind(this);
@@ -37,17 +38,32 @@ class CreateWatcher extends React.Component {
         this.closeWindow = this.closeWindow.bind(this);
     }
 
+    getNewPathInputItem() {
+       return {
+            id: uuid(), 
+            path: ''
+        }
+    }
+
+    getChangedPathInputItem(oldItem, newPath) {
+        let newItem = Object.assign({}, oldItem);
+        newItem.path = newPath;
+        return newItem;
+     }
+
     handleFolderToWatchInputChange(event) {
-        this.setState({ folderToWatch: event.newValue });
+        const newItem = this.getChangedPathInputItem(this.state.folderToWatch, event.newValue);
+        this.setState({ folderToWatch: newItem });
     }
 
     handleFoldersToSyncInputChange(event, index) {
         let newFoldersToSync = this.state.foldersToSync.map(i => i);
 
         if(index < 0) { // index < 0 means, we want to add new empty item to list.
-            newFoldersToSync.push('');
+            newFoldersToSync.push(this.getNewPathInputItem());
         } else {
-            newFoldersToSync[index] = event.newValue;
+            const newItem = this.getChangedPathInputItem(newFoldersToSync[index], event.newValue);
+            newFoldersToSync[index] = newItem;
             
             if(event.cleared &&  newFoldersToSync.length > 1) {
                 newFoldersToSync.splice(index, 1);
@@ -84,7 +100,7 @@ class CreateWatcher extends React.Component {
                 <div className="field">
                     <label>Select a <u>folder</u> to watch for changes</label>
                     <FolderInput placeholder="Type or browse or drop a folder to watch" 
-                        value={this.state.folderToWatch}
+                        value={this.state.folderToWatch.path}
                         onChange={this.handleFolderToWatchInputChange}/>
                 </div>
                 <div className="field">
@@ -100,14 +116,12 @@ class CreateWatcher extends React.Component {
 
     renderFoldersToSyncItems() {
         return this.state.foldersToSync.map((item, index) => {
-            const value = this.state.foldersToSync[index];
-            const key = `${index}_${value}`;
-
+            const stateItem = this.state.foldersToSync[index];
             return (
                 <FolderInputWithMargin 
-                    key={key}
+                    key={stateItem.id}
                     placeholder="Type or browse or drop a folder to sync"
-                    value={value}
+                    value={stateItem.path}
                     onChange={event => this.handleFoldersToSyncInputChange(event, index)}/>
             );
         });
