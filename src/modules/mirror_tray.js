@@ -3,56 +3,58 @@ const { app, Tray, Menu } = require('electron');
 const MirrorWindow = require('./mirror_window');
 const fsHelper = require('../helpers/file_system');
 
+// Private class member symbols for encapsulation
+const _init = Symbol('init');
+const _buildContextMenu = Symbol('buildContextMenu');
+const _createContextMenuTemplate = Symbol('createContextMenuTemplate');
+const _createContextMenuItem = Symbol('createContextMenuItem');
+const _createSeperator = Symbol('createSeperator');
+const _showCreateWatcherWindow = Symbol('showCreateWatcherWindow');
+const _createWatcherWindowRef = Symbol('createWatcherWindowRef');
+
 class MirrorTray extends Tray {
     constructor(options) {
         super(options.iconPath || fsHelper.getDefaultIconPath());
 
-        this.init(options);
-        //this.registerEvents();
-        this.buildContextMenu();
+        this[_init](options);
+        this[_buildContextMenu]();
 
-        this.createWatcherWindowRef = null;
+        this[_createWatcherWindowRef] = null;
     }
 
-    init(options) {
+    [_init](options) {
         this.setToolTip(options.toolTip);
         this.setPressedImage(fsHelper.getDefaultPressedIconPath());
     }
 
-    registerEvents() {
-        this.on('click', () => {
-            this.buildContextMenu();
-        });
-    }
-
-    buildContextMenu() {
-        const menuTemplate = this.createContextMenuTemplate();
+    [_buildContextMenu]() {
+        const menuTemplate = this[_createContextMenuTemplate]();
         const contextMenu = Menu.buildFromTemplate(menuTemplate);
         this.setContextMenu(contextMenu);
     }
 
-    createContextMenuTemplate() {
+    [_createContextMenuTemplate]() {
         return [
-            this.createContextMenuItem("New..", () => {
-                this.showCreateWatcherWindow();
+            this[_createContextMenuItem]("New..", () => {
+                this[_showCreateWatcherWindow]();
             }, 'CmdOrCtrl+N'),
-            this.createSeperator(),
-            this.createContextMenuItem("About Mirror"),
-            this.createContextMenuItem("Quit", app.quit, 'CmdOrCtrl+Q')
+            this[_createSeperator](),
+            this[_createContextMenuItem]("About Mirror"),
+            this[_createContextMenuItem]("Quit", app.quit, 'CmdOrCtrl+Q')
         ];
     }
 
-    createContextMenuItem(label, click, accelerator) {
+    [_createContextMenuItem](label, click, accelerator) {
         return { label, click, accelerator };
     }
 
-    createSeperator() {
+    [_createSeperator]() {
         return { type: 'separator' };
     }
 
-    showCreateWatcherWindow() {
-        if(this.createWatcherWindowRef == null) {
-            this.createWatcherWindowRef = new MirrorWindow({
+    [_showCreateWatcherWindow]() {
+        if(this[_createWatcherWindowRef] == null) {
+            this[_createWatcherWindowRef] = new MirrorWindow({
                 height: 275,
                 width: 400,
                 show: true,
@@ -60,11 +62,11 @@ class MirrorTray extends Tray {
                 title: 'Create New Watcher'
             });
 
-            this.createWatcherWindowRef.on('close', () => {
-                this.createWatcherWindowRef = null;
+            this[_createWatcherWindowRef].on('close', () => {
+                this[_createWatcherWindowRef] = null;
             })
         } else {
-            this.createWatcherWindowRef.focus();
+            this[_createWatcherWindowRef].focus();
         }
     }
 }
