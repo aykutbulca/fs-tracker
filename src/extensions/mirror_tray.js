@@ -1,7 +1,7 @@
 const { app, Tray, Menu } = require('electron');
 
 const MirrorWindow = require('./mirror_window');
-const fsHelper = require('../helpers/file_system');
+const fsHelper = require('../modules/file_system');
 
 // Private class member symbols for encapsulation
 const _init = Symbol('init');
@@ -16,10 +16,10 @@ class MirrorTray extends Tray {
     constructor(options) {
         super(options.iconPath || fsHelper.getDefaultIconPath());
 
+        this[_createWatcherWindowRef] = null;
+        
         this[_init](options);
         this[_buildContextMenu]();
-
-        this[_createWatcherWindowRef] = null;
     }
 
     [_init](options) {

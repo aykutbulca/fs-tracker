@@ -2,8 +2,8 @@
 
 const electron = require('electron');
 
-const MirrorTray = require('./src/modules/mirror_tray');
-const envHelper = require('./src/helpers/environment');
+const MirrorTray = require('./src/extensions/mirror_tray');
+const envHelper = require('./src/modules/environment');
 
 const { app } = electron;
 

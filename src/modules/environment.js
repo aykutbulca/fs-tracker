@@ -1,26 +1,24 @@
 const platform = require('os').platform();
 
 const envHelper = (function () {
-    isMac = () => {
+    let publicMembers = {};
+
+    publicMembers.isMac = () => {
         return platform == 'darwin'
-    },
+    }
 
-    isWindows = () => {
+    publicMembers.isWindows = () => {
         return platform == 'win32'
-    },
+    }
 
-    isDevelopment = () => {
+    publicMembers.isDevelopment = () => {
         return process.defaultApp 
             || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) 
             || /[\\/]electron[\\/]/.test(process.execPath)
             || process.argv.indexOf('--noDevServer') > -1;
     }
 
-    return {
-        isMac,
-        isWindows,
-        isDevelopment
-    }
+    return publicMembers;
 })();
 
 module.exports = envHelper;

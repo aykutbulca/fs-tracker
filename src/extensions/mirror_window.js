@@ -1,5 +1,5 @@
 const { BrowserWindow } = require('electron');
-const fsHelper = require('../helpers/file_system');
+const fsHelper = require('../modules/file_system');
 
 const defaultWindowProperties = {
     minimizable: false,
