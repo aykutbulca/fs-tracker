@@ -8,15 +8,19 @@ const defaultWindowProperties = {
     show: false
 };
 
+// Private class member symbols for encapsulation
+const _init = Symbol('init');
+const _registerEvents = Symbol('registerEvents');
+
 class MirrorWindow extends BrowserWindow {
     constructor(options) {
         super(defaultWindowProperties);
 
-        this.init(options);
-        this.registerEvents(options);
+        this[_init](options);
+        this[_registerEvents](options);
     }
 
-    init(options) {
+    [_init](options) {
         this.setSize(options.width, options.height, options.animate);
         this.center();
 
@@ -25,7 +29,7 @@ class MirrorWindow extends BrowserWindow {
         }
     }
 
-    registerEvents(options) {
+    [_registerEvents](options) {
         this.once('ready-to-show', () => {
             this.setTitle(options.title);
             if(options.show) {
