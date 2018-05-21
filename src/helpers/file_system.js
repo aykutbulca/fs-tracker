@@ -1,13 +1,13 @@
 const envHelper = require('./environment');
 const path = require('path');
 
-const fsHelper = {
+const fsHelper = (function () {
 
-    getFullPath: (folder, file) => {
+    getFullPath = (folder, file) => {
         return path.join(__dirname, '../..', folder, file);
     },
 
-    getDefaultIconPath: () => {
+    getDefaultIconPath = () => {
         if (envHelper.isMac()) {
             return fsHelper.getFullPath('src', 'assets/icons/mirror.png');
         } else if (envHelper.isWindows()) {
@@ -17,7 +17,7 @@ const fsHelper = {
         return null;
     },
 
-    getDefaultPressedIconPath: () => {
+    getDefaultPressedIconPath = () => {
         if (envHelper.isMac()) {
             return fsHelper.getFullPath('src', 'assets/icons/mirror-pressed.png');
         }
@@ -25,7 +25,7 @@ const fsHelper = {
         return null;
     },
 
-    getDefaultIndexHtmlUrl: () => {
+    getDefaultIndexHtmlUrl = () => {
         if(envHelper.isDevelopment()) {
             return 'http://localhost:8080';
         }
@@ -33,6 +33,12 @@ const fsHelper = {
         return `file://${ fsHelper.getFullPath('dist', 'index.html') }`
     }
 
-};
+    return {
+        getFullPath,
+        getDefaultIconPath,
+        getDefaultPressedIconPath,
+        getDefaultIndexHtmlUrl
+    }
+})();
 
 module.exports = fsHelper;
