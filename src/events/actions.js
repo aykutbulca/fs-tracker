@@ -1,0 +1,5 @@
+const ADD_NEW_WATCHER_SYNC = 'ADD_NEW_WATCHER_SYNC';
+
+module.exports = {
+    ADD_NEW_WATCHER_SYNC
+}

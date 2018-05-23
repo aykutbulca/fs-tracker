@@ -6,6 +6,8 @@ import styled from 'styled-components';
 
 import FolderInput from './folder_input';
 
+import { addNewWatcherSync } from '../../events/window_events';
+
 const StyledButton = styled.button`
     margin-top: 10px !important;
     float: right !important;
@@ -81,7 +83,10 @@ class CreateWatcher extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log("state", this.state);
+        const success = addNewWatcherSync(this.state);
+        if(success) {
+            this.closeWindow();
+        }
     }
 
     changeWindowHeight(offset) {
